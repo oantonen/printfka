@@ -6,7 +6,7 @@
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/23 16:44:15 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/15 13:38:34 by oantonen         ###   ########.fr       */
+/*   Updated: 2018/01/15 14:34:51 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,11 @@ char		*pf_itoa_signed(long long int nb)
 	return (fresh);
 }
 
-intmax_t	cast_ssize(void *nb)
+intmax_t	cast_ssize(void *nb2)
 {
+	intmax_t nb;
+
+	nb = (intmax_t)nb2;
 	if (ISHH == 1 && !((g_mode.flags << 20) >> 27))
 		return ((signed char)nb);
 	else if (ISH == 1 && !((g_mode.flags << 20) >> 28))
@@ -90,6 +93,8 @@ char		*pf_put_signed_nb(void *nb)
 	int		len_old;
 
 	len_new = 0;
+	if (ISDOT && ISZERO)
+		g_mode.flags &= ~(1UL << 4);
 	// printf("g_mode.width=%d\n", g_mode.width);
 	// printf("g_mode.prec=%d\n", g_mode.prec);
 	s = pf_itoa_signed(cast_ssize(nb));

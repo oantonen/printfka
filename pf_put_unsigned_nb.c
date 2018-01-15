@@ -6,7 +6,7 @@
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/28 19:59:35 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/15 14:09:21 by oantonen         ###   ########.fr       */
+/*   Updated: 2018/01/15 14:44:55 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char		*pf_char_count(uintmax_t value, int base, int *chars, int prec)
 	}
 	value = value2;
 	*chars = i;
-	*chars = (g_mode.width > i && ISZERO && !ISMINUS) ? g_mode.width : *chars;
+	// *chars = (g_mode.width > i && ISZERO && !ISMINUS) ? g_mode.width : *chars;
 	if (MB_CUR_MAX == 4 && ISAPOSTROPHE)
 	{
 		(g_mode.specif == 'u' && (i > 3 && value > 0)) \
@@ -104,9 +104,8 @@ char			*pf_put_unsigned_nb(void *nb)
 		g_mode.flags &= ~(1UL << 4);
 	s = pf_itoa_unsigned(cast_usize(nb), g_mode.specif);
 	len_old = ft_strlen(s);
-	pref = (g_mode.specif == 'u' && ISSPACE) ? " " : "";
-	pref = (g_mode.specif == 'x' && ISHASH) ? "0x" : pref;
-	pref = (g_mode.specif == 'X' && ISHASH) ? "0X" : pref;
+	pref = (g_mode.specif == 'x' && ISHASH && cast_usize(nb)) ? "0x" : "";
+	pref = (g_mode.specif == 'X' && ISHASH && cast_usize(nb)) ? "0X" : pref;
 	// pref = (g_mode.specif == 'o' && ISHASH) ? "0" : pref;
 	return (pf_final_modify(s, len_old, g_mode.width, pref));
 }
