@@ -6,7 +6,7 @@
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/16 18:38:06 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/14 17:10:10 by oantonen         ###   ########.fr       */
+/*   Updated: 2018/01/16 14:48:09 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,12 @@
 
 typedef struct	s_spec
 {
-	int			flags;
+	unsigned int	flags;
 	int			width;
 	int			prec;
 	char		specif;
+	int			cur_len;
+	int			sup_len;
 
 }				t_spec;
 
@@ -58,6 +60,7 @@ t_spec	g_mode;
 # define Z g_mode.flags |= 1UL << 11
 # define APOSTROPHE g_mode.flags |= 1UL << 12
 # define LD g_mode.flags |= 1UL << 13
+# define C0 g_mode.flags |= 1UL << 14
 
 
 # define ISMINUS ((g_mode.flags >> 0) & 1U)
@@ -74,6 +77,7 @@ t_spec	g_mode;
 # define ISZ ((g_mode.flags >> 11) & 1U)
 # define ISAPOSTROPHE ((g_mode.flags >> 12) & 1U)
 # define ISLD ((g_mode.flags >> 13) & 1U)
+# define ISC0 ((g_mode.flags >> 14) & 1U)
 
 
 
@@ -84,7 +88,7 @@ t_spec	g_mode;
 char	*pf_putchar(unsigned int c);
 char	*pf_putstr(unsigned int *s);
 char	*pf_putaddr(unsigned long long adr);
-char	*ft_flag_width(char *str);
+char	*ft_flag_width(char *str, int len);
 char	*pf_put_signed_nb(void *nb);
 char	*pf_put_unsigned_nb(void *nb);
 int		specif(char s);

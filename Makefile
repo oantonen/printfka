@@ -8,7 +8,7 @@ ft_striteri.c ft_strmap.c ft_strmapi.c ft_strequ.c ft_strnequ.c ft_strsub.c ft_s
 ft_itoa.c ft_putchar.c ft_putstr.c ft_putendl.c ft_putnbr.c ft_putchar_fd.c ft_putstr_fd.c ft_putendl_fd.c ft_putnbr_fd.c \
 ft_lstnew.c ft_lstdelone.c ft_lstdel.c ft_lstadd.c ft_lstiter.c ft_lstmap.c ft_putnstr.c ft_itoa_base.c ft_nbrlen.c \
 ft_strrev.c ft_atoi_base.c ft_list_push_back.c ft_strchrlen.c ft_printf.c pf_putchar.c pf_putstr.c pf_putaddr.c \
-pf_put_signed_nb.c pf_flag_width.c pf_support.c pf_put_unsigned_nb.c  pf_flag_mng.c pf_percent.c
+pf_put_signed_nb.c  pf_support.c pf_put_unsigned_nb.c  pf_flag_mng.c pf_percent.c
 
 OBJS = $(SRCS:.c=.o)
 

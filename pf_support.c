@@ -6,7 +6,7 @@
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/25 17:26:37 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/15 13:49:12 by oantonen         ###   ########.fr       */
+/*   Updated: 2018/01/16 15:13:54 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,10 @@ char	*add_mem(char *super_str, char *result, int *buf)
 
 	tmp = super_str;
 	size_sup = ft_strlen(super_str);
+	// printf("size_sup%d\n", size_sup);
 	size_sup = *buf - size_sup;
 	add = ft_strlcat(super_str, result, *buf);
+	// printf("\nsuper_str=%s\n", super_str);
 	if (add > *buf)
 	{
 		*buf = add * 2;

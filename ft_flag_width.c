@@ -1,40 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pf_percent.c                                       :+:      :+:    :+:   */
+/*   ft_flag_width.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/01/12 16:07:44 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/15 20:31:42 by oantonen         ###   ########.fr       */
+/*   Created: 2017/12/24 15:22:35 by oantonen          #+#    #+#             */
+/*   Updated: 2017/12/28 15:42:36 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "hprintf.h"
 
-char	*pf_percent(void *nb)
+char	*ft_flag_width(char *str)
 {
-	char	*str;
 	int		len;
+	char	*tmp;
 
-	str = NULL;
-	nb = NULL;
-	len = (g_mode.width > 1) ? g_mode.width : 1;
-	str = ft_strnew(len);
-	if (ISMINUS)
+	len = ft_strlen(str);
+	tmp = str;
+	if (g_mode.width > len && ISMINUS == 0)
 	{
-		ft_memset(str, ' ', len);
-		str[0] = '%';		
+		str = ft_strnew(g_mode.width);
+		str = ft_memset(str, ' ', g_mode.width - len);
+		str = ft_strcat(str, tmp);
 	}
-	else
+	else if (g_mode.width > len && ISMINUS == 1)
 	{
-		if (ISZERO == 1)
-			ft_memset(str, '0', len);
-		else
-			ft_memset(str, ' ', len);
-		str[len - 1] = '%';		
+		str = ft_strnew(g_mode.width);
+		str = ft_memset(str, ' ', g_mode.width);
+		str = ft_memcpy(str, tmp, len);
 	}
-	g_mode.sup_len += len;
-	g_mode.cur_len = len;
+	free(tmp);
+	tmp = NULL;
 	return (str);
 }

@@ -6,7 +6,7 @@
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/11 16:09:36 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/15 13:52:53 by oantonen         ###   ########.fr       */
+/*   Updated: 2018/01/16 15:14:13 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,10 @@ char	*pf_apply_flags_nominus(char *s, int len_old, int len_new, char *pref)
 	else if ((g_mode.width > len_old && ISZERO && *pref) || g_mode.width < len_old)
 		ft_strncpy(new_s, pref, p);
 	ft_strcat(new_s, s);
+	g_mode.sup_len += ft_strlen(new_s);
+	g_mode.cur_len = ft_strlen(new_s);
+	// printf("g_mode.sup_len=%d\n", g_mode.sup_len);
+	// printf("g_mode.cur_len=%d\n", g_mode.cur_len);
 	return (new_s);
 }
 
@@ -62,6 +66,10 @@ char	*pf_apply_flags(char *s, int len_old, int len_new, int sign, char *pref)
 			ft_memset(&new_s[len_old + p], 32, len_new - len_old - p);
 		else if (g_mode.width > len_old && !(*pref))
 			ft_memset(&new_s[len_old], 32, len_new - len_old);
+		g_mode.sup_len += ft_strlen(new_s);
+		g_mode.cur_len = ft_strlen(new_s);
+		// printf("g_mode.sup_len=%d\n", g_mode.sup_len);
+		// printf("g_mode.cur_len=%d\n", g_mode.cur_len);
 	}
 	else 
 		new_s = pf_apply_flags_nominus(s, len_old, len_new, pref);
@@ -73,7 +81,7 @@ char	*pf_final_modify(char *s, int len_old, int width, char *pref)
 	int		len_new;
 	char	*new_s;
 	int		sign = 0;
-// printf("s=%s\n", pref);
+// printf("s=%s\n", s);
 	len_new = 0;
 // sign = ((int)nb >= 0) ? 1 : -1;
 	(width < 0) ? MINUS : width;

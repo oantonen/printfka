@@ -6,7 +6,7 @@
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/16 18:35:16 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/15 14:14:37 by oantonen         ###   ########.fr       */
+/*   Updated: 2018/01/16 16:23:32 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,28 +79,34 @@ char	*browse_arg(char *arg, va_list ap)
 	int		buf;
 	void	*d;
 
-	buf = 100;
-	sup_str = ft_strnew(100);
+	buf = 10000;
+	sup_str = ft_strnew(10000);
+	d = ap;
 	while (*arg)
 	{
 		if (ft_strchr(arg, '%') == NULL)
 		{
 			// printf("\narg1=%s\n", arg);
-			sup_str = ft_strcat(sup_str, arg);
+			ft_strcat(&sup_str[g_mode.sup_len], arg);
+			g_mode.sup_len += ft_strlen(arg);
 			break ;
 		}
-		sup_str = ft_strncat(sup_str, arg, ft_strchrlen(arg, '%')); //допилить добавку памяти
+		ft_memcpy(&sup_str[g_mode.sup_len], arg, ft_strchrlen(arg, '%'));
+		g_mode.sup_len += ft_strchrlen(arg, '%');
 		arg = ft_strchr(arg, '%');
-		arg = all_flags(++arg, ap);
 		// printf("\narg2=%s\n", arg);
-		if (ft_strchr("%cspdouxXCSOiDU", *arg) != NULL)
+		arg = all_flags(++arg, ap);
+		// printf("\narg3=%s\n", arg);
+		if (*arg && ft_strchr("%cspdouxXCSOiDU", *arg) != NULL)
 		{
-			// printf("\narg2=%s\n", arg);
+			// printf("\narg4=%s\n", arg);
 			d = va_arg(ap, void*);
-			sup_str = add_mem(sup_str, (*g_functions[specif(*arg)])(d), &buf);
+			ft_memcpy(&sup_str[g_mode.sup_len], (*g_functions[specif(*arg)])(d), g_mode.cur_len);
 			arg++;
 			// printf("arg2=%s\n", arg);
 		}
+		// if (*arg && ft_strchr("%cspdouxXCSOiDU", *arg) == NULL)
+			// arg++;
 	}
 	return (sup_str);
 }
@@ -110,12 +116,16 @@ int		ft_printf(const char *arg, ...)
 {
 	va_list		ap;
 	char		*super_str;
+	int			printf_len;
 
 	va_start(ap, arg);
 	super_str = browse_arg((char*)arg, ap);
 	va_end(ap);
-	ft_putstr(super_str);
-	return (ft_strlen(super_str));
+	write(1, super_str, g_mode.sup_len);
+	// ft_putstr(super_str);
+	printf_len = g_mode.sup_len;
+	g_mode.sup_len = 0;
+	return (printf_len);
 }
 
 //  int main()
@@ -126,9 +136,9 @@ int		ft_printf(const char *arg, ...)
 // 	// ft_printf("my__begin=%+*.3d\n", -5, 42);
 // 	// printf("lib_begin=%+*.3d\n", -5, 42);
 
-// 	int i = ft_printf("my__begin=%.4o", 42);
+// 	int i = ft_printf("@moulitest: %.o %.0o", 0, 0);
 // 	printf("\ni=%d\n", i);
-// 		i = printf("lib_begin=%.4o", 42);
+// 		i = printf("@moulitest: %.o %.0o", 0, 0);
 // 	printf("\ni=%d\n", i);
 
 
