@@ -6,7 +6,7 @@
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/20 12:40:56 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/15 21:02:06 by oantonen         ###   ########.fr       */
+/*   Updated: 2018/01/17 21:40:40 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ char	*pf_putchar(unsigned int c)
 {
 	unsigned char	chr;
 	char			*ch;
-	
+
 	chr = (unsigned char)c;
 	ch = ft_strnew(4);
 	if (c == 0)
@@ -82,6 +82,7 @@ char	*pf_putchar(unsigned int c)
 		else if (first_bit(c) > 16 && first_bit(c) < 31)
 			pf_lputchar_4byte(c, ch);
 	}
-	// printf("ch=%c\n", ch[1]);
+	if (ft_strchr("sS", g_mode.specif))
+		return (ch);
 	return (ft_flag_width(ch, ft_strlen(ch)));
 }

@@ -6,18 +6,18 @@
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/23 14:23:21 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/14 19:44:08 by oantonen         ###   ########.fr       */
+/*   Updated: 2018/01/17 21:55:17 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "hprintf.h"
 
-int		char_count(long value, int base)
+int		char_count(uintmax_t value, int base)
 {
 	int i;
 
 	i = 0;
-	if (value == 0)
+	if (value == 0 && !ISDOT)
 		return (1);
 	while (value)
 	{
@@ -27,12 +27,12 @@ int		char_count(long value, int base)
 	return (i);
 }
 
-char			*pf_itoa_addr(char *res, long int value, int base, int count)
+char			*pf_itoa_addr(char *res, uintmax_t value, int base, int count)
 {
 	char		*base_num;
 
 	base_num = "0123456789abcdef";
-	if (value == 0)
+	if (value == 0 && !ISDOT)
 		res[2] = '0';
 	while (value != 0 )
 	{
@@ -43,15 +43,20 @@ char			*pf_itoa_addr(char *res, long int value, int base, int count)
 		value = value / base;
 		count--;
 	}
-	return (res);
+	// g_mode.sup_len += ft_strlen(res);
+	// g_mode.cur_len = ft_strlen(res);
+	return (pf_final_modify(res, count, g_mode.width, ""));
 }
 
-char	*pf_putaddr(unsigned long long adr)
+char	*pf_putaddr(va_list ap)
 {
-	char	*res;
-	int		count;
+	char		*res;
+	int			count;
+	uintmax_t	adr;
 
+	adr = va_arg(ap, uintmax_t);
 	count = char_count(adr, 16) + 2;
+
 	res = ft_strnew(count);
 	res[0] = '0';
 	res[1] = 'x';

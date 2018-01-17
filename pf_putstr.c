@@ -6,7 +6,7 @@
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/20 19:13:37 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/15 21:37:31 by oantonen         ###   ########.fr       */
+/*   Updated: 2018/01/17 22:01:12 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,7 @@ char	*ft_flag_width(char *str, int len)
 		str = ft_memset(str, ' ', g_mode.width);
 		str = ft_memcpy(str, tmp, len);
 	}
-	if (ft_strcmp(tmp, "(null)") != 0)
-		ft_strdel(&tmp);
+	ft_strdel(&tmp);
 	len = (g_mode.specif == 'c' && g_mode.width > 1) ? g_mode.width : len;
 	g_mode.sup_len += (g_mode.specif == 'c') ? len : ft_strlen(str);
 	g_mode.cur_len = (g_mode.specif == 'c') ? len : ft_strlen(str);
@@ -44,42 +43,57 @@ char	*ft_flag_width(char *str, int len)
 
 char	*ft_str_unic(char *str, unsigned int *s)
 {
+	char *tmp;
+	char *pchar;
+
+	tmp = NULL;
+	pchar = NULL;
 	if (ISDOT == 0)
 		while (*s)
-			str = ft_strcat(str, pf_putchar(*s++));
-	else if (ISDOT == 1 && g_mode.prec)
-		while (*s && g_mode.prec/ft_strlen(pf_putchar(*s)))
 		{
+			tmp = str;
+			pchar = pf_putchar(*s++);
+			str = ft_strjoin(str, pchar);
+			ft_strdel(&tmp);
+			ft_strdel(&pchar);
+		}
+	else if (ISDOT == 1 && g_mode.prec)
+		while (*s && g_mode.prec / ft_strlen(pf_putchar(*s)))
+		{
+			tmp = str;
 			g_mode.prec = g_mode.prec - ft_strlen(pf_putchar(*s));
-			str = ft_strcat(str, pf_putchar(*s++));
+			str = ft_strjoin(str, pf_putchar(*s));
+			s++;
+			ft_strdel(&tmp);
 		}
 	else if (ISDOT == 1 && g_mode.prec == 0)
-		str = "";
+		return (str);
 	return (str);
 }
 
-char	*pf_putstr(unsigned int *s)
+char	*pf_putstr(va_list ap)
 {
-	char	*str;
-	int		len;
+	char			*str;
+	unsigned int	*s;
 
-	// len = ft_strlen((const char*)s);
-	if ((char*)s)
+	str = NULL;
+	s = va_arg(ap, unsigned int*);
+	if (s)
 	{
-		len = ft_strlen((const char*)s);
-		str = ft_strnew(len);
 		if (ISL == 0)
 		{
-			if (ISDOT == 0)
+			str = ft_strnew(ft_strlen((const char*)s));
+			if (ISDOT == 0 || (ISDOT && g_mode.prec < 0))
 				str = ft_strcpy(str, (const char*)s);
-			else
+			else if (ISDOT == 1 && g_mode.prec > 0)
 				str = ft_strncpy(str, (const char*)s, g_mode.prec);
 		}
 		else
-			ft_str_unic(str, s);
+			str = ft_str_unic(ft_strnew(0), s);
 	}
-	else
-		str = "(null)";
-	len = ft_strlen(str);
-	return (ft_flag_width(str, len));
+	else if (s == NULL)
+		str = ft_strcpy(ft_strnew(6), "(null)");
+	// if ((ISL && g_mode.specif == 's') && MB_CUR_MAX == 1)
+		// exit(0);
+	return (ft_flag_width(str, ft_strlen(str)));
 }

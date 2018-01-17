@@ -6,7 +6,7 @@
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/11 16:09:36 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/16 15:14:13 by oantonen         ###   ########.fr       */
+/*   Updated: 2018/01/17 21:59:24 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ char	*pf_apply_flags_nominus(char *s, int len_old, int len_new, char *pref)
 	p = ft_strlen(pref);
 // printf("len_old=%d\n", len_old);
 // printf("len_new=%d\n", len_new);
-
 	new_s = ft_strnew(len_new);
 	if (g_mode.width > len_old)
 		ft_memset(new_s, 32, len_new - len_old);
@@ -101,6 +100,7 @@ char	*pf_final_modify(char *s, int len_old, int width, char *pref)
 	if (ISPLUS && sign == 1 && g_mode.specif == 'd' && width < len_new)
 		len_new++;
 	new_s = pf_apply_flags(s, len_old, len_new, sign, pref);
+	ft_strdel(&s);
 	return (new_s);
 }
 

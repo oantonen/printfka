@@ -6,7 +6,7 @@
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/16 18:38:06 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/16 14:48:09 by oantonen         ###   ########.fr       */
+/*   Updated: 2018/01/16 18:37:27 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,11 +86,11 @@ t_spec	g_mode;
 # include "libft.h"
 
 char	*pf_putchar(unsigned int c);
-char	*pf_putstr(unsigned int *s);
-char	*pf_putaddr(unsigned long long adr);
+char	*pf_putstr(va_list ap);
+char	*pf_putaddr(va_list ap);
 char	*ft_flag_width(char *str, int len);
-char	*pf_put_signed_nb(void *nb);
-char	*pf_put_unsigned_nb(void *nb);
+char	*pf_put_signed_nb(va_list ap);
+char	*pf_put_unsigned_nb(va_list ap);
 int		specif(char s);
 char	*add_mem(char *super_str, char *result, int *buf);
 int		pf_get_num(char **str);
@@ -98,7 +98,8 @@ char	*pf_float_f(double nb);
 void	pf_float_output(char **s, size_t len, size_t bl, int sign);
 double	pf_float_sqrt(double sample, int prec);
 char	*pf_final_modify(char *s, int len_old, int width, char *pref);
-char	*pf_percent(void *nb);
+char	*pf_percent();
+char	*pf_function_call(char c, va_list ap);
 
 // int (*g_functions[])() = {pf_putchar, pf_putstr};
 

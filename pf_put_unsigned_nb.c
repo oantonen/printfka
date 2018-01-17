@@ -6,7 +6,7 @@
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/28 19:59:35 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/16 15:29:46 by oantonen         ###   ########.fr       */
+/*   Updated: 2018/01/17 18:16:57 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ char		*pf_itoa_unsigned(uintmax_t value, char c)
 	return (fresh);
 }
 
-uintmax_t	cast_usize(void *nb)
+uintmax_t	cast_usize(uintmax_t nb)
 {
 	if (ISHH == 1 && !((g_mode.flags << 20) >> 27))
 		return ((unsigned char)nb);
@@ -87,11 +87,12 @@ uintmax_t	cast_usize(void *nb)
 	return ((unsigned int)nb);
 }
 
-char			*pf_put_unsigned_nb(void *nb)
+char			*pf_put_unsigned_nb(va_list ap)
 {
-	char	*s;
-	char	*pref;
-	int		len_old;
+	char		*s;
+	char		*pref;
+	int			len_old;
+	uintmax_t	arg;
 
 	// if (g_mode.specif == 'o')
 		// g_mode.prec += 1;
@@ -99,13 +100,13 @@ char			*pf_put_unsigned_nb(void *nb)
 	// if (((g_mode.flags << 20) >> 20) > 0)
 	// g_mode.flags = ((g_mode.flags << 20) >> 26);
 		// printf("flags2=%u\n", g_mode.flags);
-	 
+	arg = va_arg(ap, uintmax_t);
 	if (ISDOT && ISZERO)
 		g_mode.flags &= ~(1UL << 4);
-	s = pf_itoa_unsigned(cast_usize(nb), g_mode.specif);
+	s = pf_itoa_unsigned(cast_usize(arg), g_mode.specif);
 	len_old = ft_strlen(s);
-	pref = (g_mode.specif == 'x' && ISHASH && cast_usize(nb)) ? "0x" : "";
-	pref = (g_mode.specif == 'X' && ISHASH && cast_usize(nb)) ? "0X" : pref;
+	pref = (g_mode.specif == 'x' && ISHASH && cast_usize(arg)) ? "0x" : "";
+	pref = (g_mode.specif == 'X' && ISHASH && cast_usize(arg)) ? "0X" : pref;
 	// pref = (g_mode.specif == 'o' && ISHASH) ? "0" : pref;
 	return (pf_final_modify(s, len_old, g_mode.width, pref));
 }

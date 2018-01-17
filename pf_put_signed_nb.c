@@ -6,7 +6,7 @@
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/23 16:44:15 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/15 14:34:51 by oantonen         ###   ########.fr       */
+/*   Updated: 2018/01/17 21:58:23 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,8 @@ char		*pf_itoa_signed(long long int nb)
 	return (fresh);
 }
 
-intmax_t	cast_ssize(void *nb2)
+intmax_t	cast_ssize(long long int nb)
 {
-	intmax_t nb;
-
-	nb = (intmax_t)nb2;
 	if (ISHH == 1 && !((g_mode.flags << 20) >> 27))
 		return ((signed char)nb);
 	else if (ISH == 1 && !((g_mode.flags << 20) >> 28))
@@ -85,23 +82,23 @@ intmax_t	cast_ssize(void *nb2)
 	return ((int)nb);
 }
 
-char		*pf_put_signed_nb(void *nb)
+char		*pf_put_signed_nb(va_list ap)
 {
-	char	*s;
-	char	*pref;
-	int		len_new;
-	int		len_old;
+	char			*s;
+	char			*pref;
+	long long int	arg;
+	int				len_old;
 
-	len_new = 0;
-	if (ISDOT && ISZERO)
+	arg = va_arg(ap, long long int);
+	if (ISDOT && ISZERO && g_mode.prec > 0)
 		g_mode.flags &= ~(1UL << 4);
 	// printf("g_mode.width=%d\n", g_mode.width);
 	// printf("g_mode.prec=%d\n", g_mode.prec);
-	s = pf_itoa_signed(cast_ssize(nb));
+	s = pf_itoa_signed(cast_ssize(arg));
 	len_old = ft_strlen(s);
-	pref = (ISPLUS && cast_ssize(nb) >= 0) ? "+" : "";
-	pref = (ISSPACE && cast_ssize(nb) > 0 && !ISPLUS) ? " " : pref;
-	pref = (cast_ssize(nb) < 0) ? "-" : pref;
+	pref = (ISPLUS && cast_ssize(arg) >= 0) ? "+" : "";
+	pref = (ISSPACE && cast_ssize(arg) > 0 && !ISPLUS) ? " " : pref;
+	pref = (cast_ssize(arg) < 0) ? "-" : pref;
 	return (pf_final_modify(s, len_old, g_mode.width, pref));
 }
 

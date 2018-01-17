@@ -6,11 +6,34 @@
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/25 17:26:37 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/16 15:13:54 by oantonen         ###   ########.fr       */
+/*   Updated: 2018/01/17 21:11:36 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "hprintf.h"
+
+char	*pf_function_call(char c, va_list ap)
+{
+	unsigned int ch;
+
+
+	if (c == 'c' || c == 'C')
+	{
+		ch = va_arg(ap, unsigned int);
+		return (pf_putchar(ch));
+	}
+	else if (c == 's' || c == 'S')
+		return (pf_putstr(ap));
+	else if (c == 'd' || c == 'i' || c == 'D')
+		return (pf_put_signed_nb(ap));
+	else if (c == 'p')
+		return (pf_putaddr(ap));
+	else if (ft_strchr("oOuUxX", c))
+		return (pf_put_unsigned_nb(ap));
+	else if (c == '%')
+		return (pf_percent());
+	return ("op-op");
+}
 
 char	*add_mem(char *super_str, char *result, int *buf)
 {
