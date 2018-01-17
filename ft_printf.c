@@ -6,7 +6,7 @@
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/16 18:35:16 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/16 16:23:32 by oantonen         ###   ########.fr       */
+/*   Updated: 2018/01/17 21:43:23 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ char	*all_flags(char *s, va_list ap)
 		(*s == '\'') ? APOSTROPHE : *s;
 		(*s == 'L') ? LD : *s;
 		// printf("s=%c\n", *s);
-		if (*s == '\0' || specif(*s) != -1)
+		if (*s == '\0' || specif(*s) != -1 || !ft_strchr(" -+#*hljz\'.01234567890", *s))
 			break ;
 		else
 			s++;
@@ -76,12 +76,9 @@ char	*all_flags(char *s, va_list ap)
 char	*browse_arg(char *arg, va_list ap)
 {
 	char	*sup_str;
-	int		buf;
-	void	*d;
+	char	*clr;
 
-	buf = 10000;
-	sup_str = ft_strnew(10000);
-	d = ap;
+	sup_str = ft_strnew(1000);
 	while (*arg)
 	{
 		if (ft_strchr(arg, '%') == NULL)
@@ -91,7 +88,7 @@ char	*browse_arg(char *arg, va_list ap)
 			g_mode.sup_len += ft_strlen(arg);
 			break ;
 		}
-		ft_memcpy(&sup_str[g_mode.sup_len], arg, ft_strchrlen(arg, '%'));
+		ft_memcpy(&sup_str[g_mode.sup_len], arg, ft_strchrlen(arg, '%')); //допилить добавку памяти
 		g_mode.sup_len += ft_strchrlen(arg, '%');
 		arg = ft_strchr(arg, '%');
 		// printf("\narg2=%s\n", arg);
@@ -100,13 +97,15 @@ char	*browse_arg(char *arg, va_list ap)
 		if (*arg && ft_strchr("%cspdouxXCSOiDU", *arg) != NULL)
 		{
 			// printf("\narg4=%s\n", arg);
-			d = va_arg(ap, void*);
-			ft_memcpy(&sup_str[g_mode.sup_len], (*g_functions[specif(*arg)])(d), g_mode.cur_len);
+			clr = pf_function_call(*arg, ap);
+			// ft_memcpy(&sup_str[g_mode.sup_len], pf_function_call(*arg, ap), g_mode.cur_len);
+			ft_strncat(sup_str, clr, g_mode.cur_len);
+			// printf("g_mode.cur_len=%d\n", g_mode.cur_len);
+			if (ft_strchr("%pDuUxXoOdi", *arg))
+				ft_strdel(&clr);
 			arg++;
 			// printf("arg2=%s\n", arg);
 		}
-		// if (*arg && ft_strchr("%cspdouxXCSOiDU", *arg) == NULL)
-			// arg++;
 	}
 	return (sup_str);
 }
@@ -122,28 +121,9 @@ int		ft_printf(const char *arg, ...)
 	super_str = browse_arg((char*)arg, ap);
 	va_end(ap);
 	write(1, super_str, g_mode.sup_len);
-	// ft_putstr(super_str);
+	// ft_memset(super_str, 0, 1000);
+	// ft_strdel(&super_str);
 	printf_len = g_mode.sup_len;
 	g_mode.sup_len = 0;
 	return (printf_len);
 }
-
-//  int main()
-// {
-// 	// setlocale(LC_ALL, "");
-// 	// i = ft_printf("str=%.5ls", L"");
-	
-// 	// ft_printf("my__begin=%+*.3d\n", -5, 42);
-// 	// printf("lib_begin=%+*.3d\n", -5, 42);
-
-// 	int i = ft_printf("@moulitest: %.o %.0o", 0, 0);
-// 	printf("\ni=%d\n", i);
-// 		i = printf("@moulitest: %.o %.0o", 0, 0);
-// 	printf("\ni=%d\n", i);
-
-
-
-
-
-// 	// printf("symbol %d\n", 123);
-// }
