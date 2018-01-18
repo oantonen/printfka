@@ -6,7 +6,7 @@
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/28 19:59:35 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/17 18:16:57 by oantonen         ###   ########.fr       */
+/*   Updated: 2018/01/18 22:30:22 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ char		*pf_char_count(uintmax_t value, int base, int *chars, int prec)
 	uintmax_t		value2;
 	char			*fresh;
 
-	i = (value == 0 && !ISDOT) ? 1 : 0;
+	i = (value == 0 && ISDOT == 0) ? 1 : 0;
+	i = (value == 0 && ISDOT == 0 && ISHASH && g_mode.specif == 'o') ? 0 : i;
 	value2 = value;
 	while (value)
 	{
@@ -31,14 +32,13 @@ char		*pf_char_count(uintmax_t value, int base, int *chars, int prec)
 	}
 	value = value2;
 	*chars = i;
-	// *chars = (g_mode.width > i && ISZERO && !ISMINUS) ? g_mode.width : *chars;
 	if (MB_CUR_MAX == 4 && ISAPOSTROPHE)
 	{
 		(g_mode.specif == 'u' && (i > 3 && value > 0)) \
 		? *chars = *chars + (i / 3) : *chars;
 		*chars = (i % 3 == 0 && i > 3) ? *chars - 1 : *chars;
 	}
-	*chars += (ISHASH && g_mode.specif == 'o') ? 1 : 0;
+	*chars += (ISHASH && g_mode.specif == 'o' && prec <= i) ? 1 : 0;
 	*chars += (prec > i) ? prec - i : 0;
 	fresh = ft_strnew(*chars);
 	ft_memset(fresh, '0', *chars);
@@ -101,7 +101,7 @@ char			*pf_put_unsigned_nb(va_list ap)
 	// g_mode.flags = ((g_mode.flags << 20) >> 26);
 		// printf("flags2=%u\n", g_mode.flags);
 	arg = va_arg(ap, uintmax_t);
-	if (ISDOT && ISZERO)
+	if (ISDOT && ISZERO && g_mode.prec > 0)
 		g_mode.flags &= ~(1UL << 4);
 	s = pf_itoa_unsigned(cast_usize(arg), g_mode.specif);
 	len_old = ft_strlen(s);

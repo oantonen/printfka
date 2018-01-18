@@ -6,7 +6,7 @@
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/20 19:13:37 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/17 22:01:12 by oantonen         ###   ########.fr       */
+/*   Updated: 2018/01/18 22:38:43 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ char	*ft_flag_width(char *str, int len)
 {
 	char	*tmp;
 // printf("str=%s\n", str);
-// printf("len=%d\n", len);
+// printf("len1=%d\n", len);
 	tmp = str;
 	if (g_mode.width > len && ISMINUS == 0)
 	{
@@ -38,6 +38,9 @@ char	*ft_flag_width(char *str, int len)
 	len = (g_mode.specif == 'c' && g_mode.width > 1) ? g_mode.width : len;
 	g_mode.sup_len += (g_mode.specif == 'c') ? len : ft_strlen(str);
 	g_mode.cur_len = (g_mode.specif == 'c') ? len : ft_strlen(str);
+// printf("len2=%d\n", len);
+// printf("g_mode.cur_len=%d\n", g_mode.cur_len);
+// printf("g_mode.sup_len=%d\n", g_mode.sup_len);
 	return (str);
 }
 
@@ -91,7 +94,9 @@ char	*pf_putstr(va_list ap)
 		else
 			str = ft_str_unic(ft_strnew(0), s);
 	}
-	else if (s == NULL)
+	else if (s == NULL && ISDOT)
+		str = ft_strncpy(ft_strnew(6), "(null)", g_mode.prec);
+	else
 		str = ft_strcpy(ft_strnew(6), "(null)");
 	// if ((ISL && g_mode.specif == 's') && MB_CUR_MAX == 1)
 		// exit(0);

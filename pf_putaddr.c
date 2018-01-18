@@ -6,34 +6,21 @@
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/23 14:23:21 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/17 21:55:17 by oantonen         ###   ########.fr       */
+/*   Updated: 2018/01/18 22:30:40 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "hprintf.h"
 
-int		char_count(uintmax_t value, int base)
-{
-	int i;
-
-	i = 0;
-	if (value == 0 && !ISDOT)
-		return (1);
-	while (value)
-	{
-		value = value / base;
-		i++;
-	}
-	return (i);
-}
-
-char			*pf_itoa_addr(char *res, uintmax_t value, int base, int count)
+char			*pf_itoa_addr(char *res, uintmax_t value, int count, char *pref)
 {
 	char		*base_num;
+	int			base;
 
+	base = 16;
 	base_num = "0123456789abcdef";
-	if (value == 0 && !ISDOT)
-		res[2] = '0';
+	// if (value == 0 && !ISDOT)
+	// 	res[2] = '0';
 	while (value != 0 )
 	{
 		if (value % base > 9)
@@ -42,10 +29,9 @@ char			*pf_itoa_addr(char *res, uintmax_t value, int base, int count)
 			res[count - 1] = value % base + '0';
 		value = value / base;
 		count--;
+
 	}
-	// g_mode.sup_len += ft_strlen(res);
-	// g_mode.cur_len = ft_strlen(res);
-	return (pf_final_modify(res, count, g_mode.width, ""));
+	return (pf_final_modify(res, ft_strlen(res), g_mode.width, pref));
 }
 
 char	*pf_putaddr(va_list ap)
@@ -53,12 +39,11 @@ char	*pf_putaddr(va_list ap)
 	char		*res;
 	int			count;
 	uintmax_t	adr;
+	char		*pref;
 
 	adr = va_arg(ap, uintmax_t);
-	count = char_count(adr, 16) + 2;
-
-	res = ft_strnew(count);
-	res[0] = '0';
-	res[1] = 'x';
-	return (pf_itoa_addr(res, adr, 16, count));
+	pref = "0x";
+	HASH;
+	res = pf_char_count(adr, 16, &count, g_mode.prec);
+	return (pf_itoa_addr(res, adr, count, pref));
 }

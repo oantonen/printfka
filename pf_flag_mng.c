@@ -6,7 +6,7 @@
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/11 16:09:36 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/17 21:59:24 by oantonen         ###   ########.fr       */
+/*   Updated: 2018/01/18 22:30:31 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ char	*pf_apply_flags_nominus(char *s, int len_old, int len_new, char *pref)
 	int		p;
 
 	p = ft_strlen(pref);
-// printf("len_old=%d\n", len_old);
-// printf("len_new=%d\n", len_new);
+// printf("len_old1=%d\n", len_old);
+// printf("len_new1=%d\n", len_new);
 	new_s = ft_strnew(len_new);
 	if (g_mode.width > len_old)
 		ft_memset(new_s, 32, len_new - len_old);
@@ -27,14 +27,12 @@ char	*pf_apply_flags_nominus(char *s, int len_old, int len_new, char *pref)
 		ft_memset(new_s, 48, len_new - len_old);
 	else if (g_mode.width > len_old && ISZERO == 1 && ISDOT == 1)
 		ft_memset(new_s, 48, len_new - len_old);
-	// if (g_mode.width > len_old && !ISZERO && c)
-		// new_s[len_new - len_old - 1] = (c && !ft_strchr("xXo", g_mode.specif)) ? c : new_s[0];
-	// else if ((g_mode.width > len_old && ISZERO && c) || g_mode.width < len_old)
-		// new_s[0] = (c && !ft_strchr("xXo", g_mode.specif)) ? c : new_s[0];
 	if (g_mode.width > len_old && !ISZERO && *pref)
 		ft_strncpy(&new_s[len_new - len_old - p], pref, p);
 	else if ((g_mode.width > len_old && ISZERO && *pref) || g_mode.width < len_old)
 		ft_strncpy(new_s, pref, p);
+	if (len_old == 0)
+		ft_strcpy(new_s, pref);
 	ft_strcat(new_s, s);
 	g_mode.sup_len += ft_strlen(new_s);
 	g_mode.cur_len = ft_strlen(new_s);
@@ -49,8 +47,8 @@ char	*pf_apply_flags(char *s, int len_old, int len_new, int sign, char *pref)
 	char	c;
 	int		p;
 
-// printf("len_old=%d\n", len_old);
-// printf("len_new=%d\n", len_new);
+// printf("len_old2=%d\n", len_old);
+// printf("len_new2=%d\n", len_new);
 	c = (sign == -1 && g_mode.specif == 'd') ? '-' : '\0';
 	c = (ISPLUS == 1 && sign == 1 && g_mode.specif == 'd') ? '+' : c;
 	c = (ISSPACE && sign != -1 && !ISPLUS && g_mode.specif == 'd') ? ' ' : c;
@@ -58,7 +56,6 @@ char	*pf_apply_flags(char *s, int len_old, int len_new, int sign, char *pref)
 	if (ISMINUS == 1)
 	{
 		new_s = ft_strnew(len_new);
-		// new_s[0] = (c && !ft_strchr("xXo", g_mode.specif)) ? c : new_s[0];
 		ft_strcpy(new_s, pref);
 		ft_strcat(new_s, s);
 		if (g_mode.width > len_old && *pref) // g_mode.prec заменить на len_old
@@ -89,8 +86,12 @@ char	*pf_final_modify(char *s, int len_old, int width, char *pref)
 		len_new++;
 	if (sign == -1 && width <= len_old)
 		len_new++;
-	if (ISHASH && ft_strchr("xX", g_mode.specif) && g_mode.width < len_old)
-		len_new += 2;
+	// if (ISHASH && ft_strchr("pxX", g_mode.specif) && g_mode.width < len_old)
+		// len_new += 2;
+	// else if (ISHASH && ft_strchr("pxX", g_mode.specif) && width - len_old < 2)
+		// len_new += (width - len_old > 2) ? 2 : width - len_old;
+	if (ISHASH && ft_strchr("pxX", g_mode.specif) && width - len_old < 2)
+		len_new += (width - len_old > 2) ? 2 : width - len_old;
 	if (width > len_old && width >= g_mode.prec)
 		len_new += width;
 	else if (g_mode.prec > len_old && width <= g_mode.prec)

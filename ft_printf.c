@@ -6,7 +6,7 @@
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/16 18:35:16 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/17 21:43:23 by oantonen         ###   ########.fr       */
+/*   Updated: 2018/01/18 22:51:53 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ char	*all_flags(char *s, va_list ap)
 	g_mode.specif = 0;
 	while (*s && specif(*s) == -1)
 	{
-		// printf("s=%c\n", *s);
+		// printf("s1=%c\n", *s);
 		(*s == '-') ? MINUS : *s;
 		(*s == '+') ? PLUS : *s;
 		(*s == ' ') ? SPACE : *s;
@@ -46,9 +46,12 @@ char	*all_flags(char *s, va_list ap)
 		if (*s == '.')
 		{
 			DOT;
-			s++;
-			g_mode.prec = pf_get_num(&s);
-			(*s++ == '*') ? g_mode.prec = va_arg(ap, int) : *s--;
+			(ft_isdigit(*++s)) ? g_mode.prec = pf_get_num(&s) : *s--;
+			// printf("g_mode.prec1=%d\n", g_mode.prec);
+			// printf("s3=%c\n", *s);
+			(*++s == '*') ? g_mode.prec = va_arg(ap, int) : *s--;
+			// printf("s4=%c\n", *s);
+			// printf("g_mode.prec2=%d\n", g_mode.prec);
 		}
 		if (*s == 'h' && *(s + 1) != 'h') // доработать, чтобы не заходило
 			H;
@@ -75,10 +78,10 @@ char	*all_flags(char *s, va_list ap)
 
 char	*browse_arg(char *arg, va_list ap)
 {
-	char	*sup_str;
+	static char	sup_str[1000];
 	char	*clr;
 
-	sup_str = ft_strnew(1000);
+	// sup_str = ft_strnew(1000);
 	while (*arg)
 	{
 		if (ft_strchr(arg, '%') == NULL)
@@ -121,7 +124,7 @@ int		ft_printf(const char *arg, ...)
 	super_str = browse_arg((char*)arg, ap);
 	va_end(ap);
 	write(1, super_str, g_mode.sup_len);
-	// ft_memset(super_str, 0, 1000);
+	ft_memset(super_str, 0, 1000);
 	// ft_strdel(&super_str);
 	printf_len = g_mode.sup_len;
 	g_mode.sup_len = 0;
