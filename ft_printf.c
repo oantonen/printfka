@@ -6,7 +6,7 @@
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/16 18:35:16 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/19 13:13:37 by oantonen         ###   ########.fr       */
+/*   Updated: 2018/01/19 13:15:03 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ char	*browse_arg(char *arg, va_list ap)
 	}
 	
 	// ft_memset(sup_str, 0, 1000);
-	return ("sup_str");
+	return (sup_str);
 }
 
 
