@@ -6,7 +6,7 @@
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/25 17:26:37 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/17 21:11:36 by oantonen         ###   ########.fr       */
+/*   Updated: 2018/01/18 21:21:41 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ int		pf_get_num(char **str)
 		res = res * 10 + (symb - 48);
 		symb = *(++*str);		
 	}
+	*str = *str - 1;
 	// printf("res=%d\n", res);
 	return (res);
 }

@@ -6,38 +6,38 @@
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/20 19:13:37 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/18 22:38:43 by oantonen         ###   ########.fr       */
+/*   Updated: 2018/01/19 12:54:01 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "hprintf.h"
 
-char	*ft_flag_width(char *str, int len)
+char	*ft_flag_width(char *str, int len, int width)
 {
 	char	*tmp;
 // printf("str=%s\n", str);
 // printf("len1=%d\n", len);
-	tmp = str;
-	if (g_mode.width > len && ISMINUS == 0)
+	tmp = ft_strcpy(ft_strnew(len), str);
+	if (width > len && ISMINUS == 0)
 	{
-		str = ft_strnew(g_mode.width);
+		str = ft_strnew(width);
 		if (ISZERO == 0)
-			str = ft_memset(str, ' ', g_mode.width - len);
+			str = ft_memset(str, ' ', width - len);
 		else
-			str = ft_memset(str, '0', g_mode.width - len);
+			str = ft_memset(str, '0', width - len);
 		str = ft_strcat(str, tmp);
 
 	}
-	else if (g_mode.width > len && ISMINUS == 1)
+	else if (width > len && ISMINUS == 1)
 	{
-		str = ft_strnew(g_mode.width);
-		str = ft_memset(str, ' ', g_mode.width);
+		str = ft_strnew(width);
+		str = ft_memset(str, ' ', width);
 		str = ft_memcpy(str, tmp, len);
 	}
 	ft_strdel(&tmp);
-	len = (g_mode.specif == 'c' && g_mode.width > 1) ? g_mode.width : len;
-	g_mode.sup_len += (g_mode.specif == 'c') ? len : ft_strlen(str);
-	g_mode.cur_len = (g_mode.specif == 'c') ? len : ft_strlen(str);
+	len = (ft_strchr("cC", g_mode.specif) && width > 1) ? width : len;
+	g_mode.sup_len += (ft_strchr("cC", g_mode.specif)) ? len : ft_strlen(str);
+	g_mode.cur_len = (ft_strchr("cC", g_mode.specif)) ? len : ft_strlen(str);
 // printf("len2=%d\n", len);
 // printf("g_mode.cur_len=%d\n", g_mode.cur_len);
 // printf("g_mode.sup_len=%d\n", g_mode.sup_len);
@@ -100,5 +100,5 @@ char	*pf_putstr(va_list ap)
 		str = ft_strcpy(ft_strnew(6), "(null)");
 	// if ((ISL && g_mode.specif == 's') && MB_CUR_MAX == 1)
 		// exit(0);
-	return (ft_flag_width(str, ft_strlen(str)));
+	return (ft_flag_width(str, ft_strlen(str), g_mode.width));
 }

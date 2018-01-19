@@ -6,7 +6,7 @@
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/11 16:09:36 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/18 22:30:31 by oantonen         ###   ########.fr       */
+/*   Updated: 2018/01/19 12:51:16 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char	*pf_apply_flags_nominus(char *s, int len_old, int len_new, char *pref)
 		ft_strncpy(&new_s[len_new - len_old - p], pref, p);
 	else if ((g_mode.width > len_old && ISZERO && *pref) || g_mode.width < len_old)
 		ft_strncpy(new_s, pref, p);
-	if (len_old == 0)
+	if (len_old == 0 && *pref)
 		ft_strcpy(new_s, pref);
 	ft_strcat(new_s, s);
 	g_mode.sup_len += ft_strlen(new_s);

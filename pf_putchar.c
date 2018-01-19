@@ -6,7 +6,7 @@
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/20 12:40:56 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/17 21:40:40 by oantonen         ###   ########.fr       */
+/*   Updated: 2018/01/19 12:36:30 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ char	*pf_putchar(unsigned int c)
 	chr = (unsigned char)c;
 	ch = ft_strnew(4);
 	if (c == 0)
-		return (ft_flag_width(ch, 1));
+		return (ft_flag_width(ch, 1, g_mode.width));
 	if (ISL == 0 || (ISL && MB_CUR_MAX == 1))
 		ch[0] = chr;
 	else
@@ -84,5 +84,5 @@ char	*pf_putchar(unsigned int c)
 	}
 	if (ft_strchr("sS", g_mode.specif))
 		return (ch);
-	return (ft_flag_width(ch, ft_strlen(ch)));
+	return (ft_flag_width(ch, ft_strlen(ch), g_mode.width));
 }
