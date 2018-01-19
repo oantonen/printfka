@@ -6,7 +6,7 @@
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/16 18:35:16 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/19 13:06:31 by oantonen         ###   ########.fr       */
+/*   Updated: 2018/01/19 13:12:09 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ char	*all_flags(char *s, va_list ap)
 
 char	*browse_arg(char *arg, va_list ap)
 {
-	char	sup_str[300];
+	char	sup_str[100000];
 	char	*clr;
 
 	// sup_str = ft_strnew(1000);
