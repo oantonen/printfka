@@ -6,7 +6,7 @@
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/16 18:35:16 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/18 22:51:53 by oantonen         ###   ########.fr       */
+/*   Updated: 2018/01/19 13:06:59 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ char	*all_flags(char *s, va_list ap)
 
 char	*browse_arg(char *arg, va_list ap)
 {
-	static char	sup_str[1000];
+	static char	sup_str[100000];
 	char	*clr;
 
 	// sup_str = ft_strnew(1000);
@@ -124,7 +124,7 @@ int		ft_printf(const char *arg, ...)
 	super_str = browse_arg((char*)arg, ap);
 	va_end(ap);
 	write(1, super_str, g_mode.sup_len);
-	ft_memset(super_str, 0, 1000);
+	ft_memset(super_str, 0, 100000);
 	// ft_strdel(&super_str);
 	printf_len = g_mode.sup_len;
 	g_mode.sup_len = 0;
