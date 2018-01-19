@@ -6,7 +6,7 @@
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/16 18:35:16 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/19 13:06:59 by oantonen         ###   ########.fr       */
+/*   Updated: 2018/01/19 13:06:31 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 #include "func_ptr.h"
 #include <locale.h>
 #include <limits.h>
+
+// #define POSITION g_mode.sup_len - g_mode.cur_len
+#define FLAG_STR " -+#*hljz\'.01234567890"
 
 int		isdigit_spec(char s)
 {
@@ -68,7 +71,7 @@ char	*all_flags(char *s, va_list ap)
 		(*s == '\'') ? APOSTROPHE : *s;
 		(*s == 'L') ? LD : *s;
 		// printf("s=%c\n", *s);
-		if (*s == '\0' || specif(*s) != -1 || !ft_strchr(" -+#*hljz\'.01234567890", *s))
+		if (*s == '\0' || specif(*s) != -1 || !ft_strchr(FLAG_STR, *s))
 			break ;
 		else
 			s++;
@@ -78,7 +81,7 @@ char	*all_flags(char *s, va_list ap)
 
 char	*browse_arg(char *arg, va_list ap)
 {
-	static char	sup_str[100000];
+	char	sup_str[300];
 	char	*clr;
 
 	// sup_str = ft_strnew(1000);
@@ -86,31 +89,25 @@ char	*browse_arg(char *arg, va_list ap)
 	{
 		if (ft_strchr(arg, '%') == NULL)
 		{
-			// printf("\narg1=%s\n", arg);
-			ft_strcat(&sup_str[g_mode.sup_len], arg);
+			ft_memcpy(&sup_str[g_mode.sup_len], arg, ft_strlen(arg));
 			g_mode.sup_len += ft_strlen(arg);
 			break ;
 		}
 		ft_memcpy(&sup_str[g_mode.sup_len], arg, ft_strchrlen(arg, '%')); //допилить добавку памяти
 		g_mode.sup_len += ft_strchrlen(arg, '%');
 		arg = ft_strchr(arg, '%');
-		// printf("\narg2=%s\n", arg);
 		arg = all_flags(++arg, ap);
-		// printf("\narg3=%s\n", arg);
 		if (*arg && ft_strchr("%cspdouxXCSOiDU", *arg) != NULL)
 		{
-			// printf("\narg4=%s\n", arg);
 			clr = pf_function_call(*arg, ap);
-			// ft_memcpy(&sup_str[g_mode.sup_len], pf_function_call(*arg, ap), g_mode.cur_len);
-			ft_strncat(sup_str, clr, g_mode.cur_len);
-			// printf("g_mode.cur_len=%d\n", g_mode.cur_len);
-			if (ft_strchr("%pDuUxXoOdi", *arg))
+			ft_memcpy(&sup_str[g_mode.sup_len - g_mode.cur_len], clr, g_mode.cur_len);
+			if (ft_strchr("%sScCpDuUxXoOdi", *arg++))
 				ft_strdel(&clr);
-			arg++;
-			// printf("arg2=%s\n", arg);
 		}
 	}
-	return (sup_str);
+	write(1, sup_str, g_mode.sup_len);
+	// ft_memset(sup_str, 0, 1000);
+	return ("sup_str");
 }
 
 
@@ -123,8 +120,8 @@ int		ft_printf(const char *arg, ...)
 	va_start(ap, arg);
 	super_str = browse_arg((char*)arg, ap);
 	va_end(ap);
-	write(1, super_str, g_mode.sup_len);
-	ft_memset(super_str, 0, 100000);
+	
+	
 	// ft_strdel(&super_str);
 	printf_len = g_mode.sup_len;
 	g_mode.sup_len = 0;
