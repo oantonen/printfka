@@ -35,7 +35,7 @@ char	*ft_flag_width(char *str, int len, int width)
 		str = ft_memcpy(str, tmp, len);
 	}
 	ft_strdel(&tmp);
-	len = (ft_strchr("cC", g_mode.specif) && width > 1) ? width : len;
+	len = (ft_strchr("cC", g_mode.specif) && width > len) ? width : len;
 	g_mode.sup_len += (ft_strchr("cC", g_mode.specif)) ? len : ft_strlen(str);
 	g_mode.cur_len = (ft_strchr("cC", g_mode.specif)) ? len : ft_strlen(str);
 // printf("len2=%d\n", len);
@@ -98,7 +98,5 @@ char	*pf_putstr(va_list ap)
 		str = ft_strncpy(ft_strnew(6), "(null)", g_mode.prec);
 	else
 		str = ft_strcpy(ft_strnew(6), "(null)");
-	// if ((ISL && g_mode.specif == 's') && MB_CUR_MAX == 1)
-		// exit(0);
 	return (ft_flag_width(str, ft_strlen(str), g_mode.width));
 }

@@ -6,7 +6,7 @@
 /*   By: oantonen <oantonen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/16 18:35:16 by oantonen          #+#    #+#             */
-/*   Updated: 2018/01/19 13:15:03 by oantonen         ###   ########.fr       */
+/*   Updated: 2018/01/19 13:27:29 by oantonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,14 @@
 #include <locale.h>
 #include <limits.h>
 
-// #define POSITION g_mode.sup_len - g_mode.cur_len
-#define FLAG_STR " -+#*hljz\'.01234567890"
+#define POSITION g_mode.sup_len - g_mode.cur_len
+#define FLAG_STR " -+#*hlLt$jz\'.01234567890"
 
 int		isdigit_spec(char s)
 {
 	char	*dig;
 
-	dig = "123456789"; // 0 ???
+	dig = "123456789";
 	while (*dig != s && *dig)
 		dig++;
 	return ((*dig == s) ? TRUE : FALSE);
@@ -36,7 +36,6 @@ char	*all_flags(char *s, va_list ap)
 	g_mode.specif = 0;
 	while (*s && specif(*s) == -1)
 	{
-		// printf("s1=%c\n", *s);
 		(*s == '-') ? MINUS : *s;
 		(*s == '+') ? PLUS : *s;
 		(*s == ' ') ? SPACE : *s;
@@ -50,15 +49,11 @@ char	*all_flags(char *s, va_list ap)
 		{
 			DOT;
 			(ft_isdigit(*++s)) ? g_mode.prec = pf_get_num(&s) : *s--;
-			// printf("g_mode.prec1=%d\n", g_mode.prec);
-			// printf("s3=%c\n", *s);
 			(*++s == '*') ? g_mode.prec = va_arg(ap, int) : *s--;
-			// printf("s4=%c\n", *s);
-			// printf("g_mode.prec2=%d\n", g_mode.prec);
 		}
-		if (*s == 'h' && *(s + 1) != 'h') // доработать, чтобы не заходило
+		if (*s == 'h' && *(s + 1) != 'h')
 			H;
-		if (*s == 'h' && *(s + 1) == 'h') // (s + 2) = segfault
+		if (*s == 'h' && *(s + 1) == 'h')
 		{
 			s++;
 			HH;
@@ -70,7 +65,6 @@ char	*all_flags(char *s, va_list ap)
 		(*s == 'z') ? Z : *s;
 		(*s == '\'') ? APOSTROPHE : *s;
 		(*s == 'L') ? LD : *s;
-		// printf("s=%c\n", *s);
 		if (*s == '\0' || specif(*s) != -1 || !ft_strchr(FLAG_STR, *s))
 			break ;
 		else
@@ -84,7 +78,7 @@ char	*browse_arg(char *arg, va_list ap)
 	char	*sup_str;
 	char	*clr;
 
-	sup_str = ft_strnew(100000);
+	sup_str = ft_strnew(1000);
 	while (*arg)
 	{
 		if (ft_strchr(arg, '%') == NULL)
@@ -93,23 +87,20 @@ char	*browse_arg(char *arg, va_list ap)
 			g_mode.sup_len += ft_strlen(arg);
 			break ;
 		}
-		ft_memcpy(&sup_str[g_mode.sup_len], arg, ft_strchrlen(arg, '%')); //допилить добавку памяти
+		ft_memcpy(&sup_str[g_mode.sup_len], arg, ft_strchrlen(arg, '%'));
 		g_mode.sup_len += ft_strchrlen(arg, '%');
 		arg = ft_strchr(arg, '%');
 		arg = all_flags(++arg, ap);
-		if (*arg && ft_strchr("%cspdouxXCSOiDU", *arg) != NULL)
+		if (*arg && ft_strchr("%cfFspdouxXCSOiDUnb", *arg) != NULL)
 		{
 			clr = pf_function_call(*arg, ap);
-			ft_memcpy(&sup_str[g_mode.sup_len - g_mode.cur_len], clr, g_mode.cur_len);
-			if (ft_strchr("%sScCpDuUxXoOdi", *arg++))
+			ft_memcpy(&sup_str[POSITION], clr, g_mode.cur_len);
+			if (ft_strchr("%sScCpDuUxXoOdifFb", *arg++))
 				ft_strdel(&clr);
 		}
 	}
-	
-	// ft_memset(sup_str, 0, 1000);
 	return (sup_str);
 }
-
 
 int		ft_printf(const char *arg, ...)
 {
@@ -121,7 +112,6 @@ int		ft_printf(const char *arg, ...)
 	super_str = browse_arg((char*)arg, ap);
 	va_end(ap);
 	write(1, super_str, g_mode.sup_len);
-	
 	ft_strdel(&super_str);
 	printf_len = g_mode.sup_len;
 	g_mode.sup_len = 0;

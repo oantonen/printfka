@@ -12,10 +12,19 @@
 
 #include "hprintf.h"
 
+char	*pf_count_written(va_list ap)
+{
+	uintmax_t	*n;
+
+	n = va_arg(ap, void*);
+	*n = g_mode.sup_len;
+	g_mode.cur_len = 0;
+	return (ft_strnew(0));
+}
+
 char	*pf_function_call(char c, va_list ap)
 {
 	unsigned int ch;
-
 
 	if (c == 'c' || c == 'C')
 	{
@@ -28,34 +37,15 @@ char	*pf_function_call(char c, va_list ap)
 		return (pf_put_signed_nb(ap));
 	else if (c == 'p')
 		return (pf_putaddr(ap));
-	else if (ft_strchr("oOuUxX", c))
+	else if (ft_strchr("oOuUxXb", c))
 		return (pf_put_unsigned_nb(ap));
 	else if (c == '%')
 		return (pf_percent());
+	else if (c == 'f' || c == 'F')
+		return (pf_put_float_f(ap));
+	else if (c == 'n')
+		return (pf_count_written(ap));
 	return ("op-op");
-}
-
-char	*add_mem(char *super_str, char *result, int *buf)
-{
-	int		add;
-	char	*tmp;
-	int		size_sup;
-
-	tmp = super_str;
-	size_sup = ft_strlen(super_str);
-	// printf("size_sup%d\n", size_sup);
-	size_sup = *buf - size_sup;
-	add = ft_strlcat(super_str, result, *buf);
-	// printf("\nsuper_str=%s\n", super_str);
-	if (add > *buf)
-	{
-		*buf = add * 2;
-		super_str = ft_strnew(*buf);
-		ft_strcpy(super_str, tmp); // копирование '\0' ??? strlen, strcpy...
-		ft_strcat(super_str, &result[size_sup - 1]);
-		ft_strdel(&tmp);
-	}
-	return (super_str);
 }
 
 int		specif(char s)
@@ -63,7 +53,7 @@ int		specif(char s)
 	char	*convers;
 	char	*ptr;
 
-	convers = "%cspdouxXCSOiDU";
+	convers = "%csnpdouxXCSOiDUfFb";
 	ptr = convers;
 	if (ft_strchr("CSDOU", s))
 	{
@@ -92,9 +82,8 @@ int		pf_get_num(char **str)
 	while (ft_isdigit(**str) && **str)
 	{
 		res = res * 10 + (symb - 48);
-		symb = *(++*str);		
+		symb = *(++*str);
 	}
 	*str = *str - 1;
-	// printf("res=%d\n", res);
 	return (res);
 }

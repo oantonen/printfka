@@ -12,10 +12,11 @@
 
 #include "hprintf.h"
 
-/* 
-** Counting the amount of digits in argument and adding 'apostrophe', '0x/0X', 
+/*
+** Counting the amount of digits in argument and adding 'apostrophe', '0x/0X',
 ** '0', filling with zeroes
 */
+
 char		*pf_char_count(uintmax_t value, int base, int *chars, int prec)
 {
 	int				i;
@@ -34,15 +35,15 @@ char		*pf_char_count(uintmax_t value, int base, int *chars, int prec)
 	*chars = i;
 	if (MB_CUR_MAX == 4 && ISAPOSTROPHE)
 	{
-		(g_mode.specif == 'u' && (i > 3 && value > 0)) \
-		? *chars = *chars + (i / 3) : *chars;
+		*chars += (g_mode.specif == 'u' && (i > 3 && value > 0)) ? (i / 3) : 0;
 		*chars = (i % 3 == 0 && i > 3) ? *chars - 1 : *chars;
 	}
+	*chars += (g_mode.specif == 'b' && (i > 4 && value > 0)) ? (i / 4) : 0;
 	*chars += (ISHASH && g_mode.specif == 'o' && prec <= i) ? 1 : 0;
-	*chars += (prec > i) ? prec - i : 0;
+	*chars += (prec > *chars) ? prec - *chars : 0; //(prec > i)
 	fresh = ft_strnew(*chars);
-	ft_memset(fresh, '0', *chars);
-	return (fresh);
+	// printf("chars=%d\n", *chars);
+	return (ft_memset(fresh, '0', *chars));
 }
 
 char		*pf_itoa_unsigned(uintmax_t value, char c)
@@ -56,11 +57,14 @@ char		*pf_itoa_unsigned(uintmax_t value, char c)
 	base = (c == 'o') ? 8 : 0;
 	base = (c == 'x' || c == 'X') ? 16 : base;
 	base = (c == 'u') ? 10 : base;
+	base = (c == 'b') ? 2 : base;
 	fresh = pf_char_count(value, base, &chars, g_mode.prec);
 	while (value != 0)
 	{
 		if (++i != 0 && ISAPOSTROPHE && !(i % 3) && c == 'u' && MB_CUR_MAX == 4)
 			fresh[--chars] = ',';
+		if (i != 0 && !(i % 4) && c == 'b')
+			fresh[--chars] = ' ';
 		fresh[chars - 1] = (value % base) + ((value % base > 9) ? 87 : '0');
 		if (c == 'X')
 			fresh[chars - 1] = (value % base) + ((value % base > 9) ? 55 : '0');
@@ -87,30 +91,21 @@ uintmax_t	cast_usize(uintmax_t nb)
 	return ((unsigned int)nb);
 }
 
-char			*pf_put_unsigned_nb(va_list ap)
+char		*pf_put_unsigned_nb(va_list ap)
 {
 	char		*s;
 	char		*pref;
 	int			len_old;
 	uintmax_t	arg;
 
-	// if (g_mode.specif == 'o')
-		// g_mode.prec += 1;
-	// printf("flags1=%u\n", g_mode.flags);
-	// if (((g_mode.flags << 20) >> 20) > 0)
-	// g_mode.flags = ((g_mode.flags << 20) >> 26);
-		// printf("flags2=%u\n", g_mode.flags);
 	arg = va_arg(ap, uintmax_t);
-	if (ISDOT && ISZERO && g_mode.prec > 0)
+	if (ISDOT && ISZERO && g_mode.prec >= 0)
 		g_mode.flags &= ~(1UL << 4);
+	if (cast_usize(arg) == 0 && g_mode.specif != 'o')
+		g_mode.flags &= ~(1UL << 3);
 	s = pf_itoa_unsigned(cast_usize(arg), g_mode.specif);
 	len_old = ft_strlen(s);
 	pref = (g_mode.specif == 'x' && ISHASH && cast_usize(arg)) ? "0x" : "";
 	pref = (g_mode.specif == 'X' && ISHASH && cast_usize(arg)) ? "0X" : pref;
-	// pref = (g_mode.specif == 'o' && ISHASH) ? "0" : pref;
 	return (pf_final_modify(s, len_old, g_mode.width, pref));
 }
-
-
-
-

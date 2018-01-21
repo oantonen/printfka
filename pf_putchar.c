@@ -67,6 +67,8 @@ char	*pf_putchar(unsigned int c)
 
 	chr = (unsigned char)c;
 	ch = ft_strnew(4);
+	if (chr == 0 && ISL == 0) //c -> chr
+		return (ft_flag_width(ch, 1, g_mode.width)); //
 	if (c == 0)
 		return (ft_flag_width(ch, 1, g_mode.width));
 	if (ISL == 0 || (ISL && MB_CUR_MAX == 1))

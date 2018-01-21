@@ -23,7 +23,7 @@ char	*pf_percent()
 	if (ISMINUS)
 	{
 		ft_memset(str, ' ', len);
-		str[0] = '%';		
+		str[0] = '%';
 	}
 	else
 	{
@@ -31,7 +31,7 @@ char	*pf_percent()
 			ft_memset(str, '0', len);
 		else
 			ft_memset(str, ' ', len);
-		str[len - 1] = '%';		
+		str[len - 1] = '%';
 	}
 	g_mode.sup_len += len;
 	g_mode.cur_len = len;

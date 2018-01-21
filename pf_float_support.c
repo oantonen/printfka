@@ -12,57 +12,43 @@
 
 #include "hprintf.h"
 
-double		pf_float_sqrt(double sample, int g_prec)
+double		pf_float_sqrt(long double sample, int g_prec)
 {
 	int		prec2;
 
 	prec2 = g_prec;
+	if (prec2 == 0)
+		sample = 1.0;
 	if (prec2 != 0)
 		while (--prec2 != 0)
 			sample = sample / 10;
 	return (sample);
 }
 
-void	pf_float_output_nominus(char **s, size_t len, size_t bl, int sign)
+int		pf_check_even(long double nb)
 {
-	char 	*str_float;
-	char	*tmp;
-	char	c;
+	int		nb2;
 
-	c = (sign == 1) ? '-' : '\0';
-	c = (ISPLUS == 1 && sign == 0) ? '+' : c;
-	c = (ISSPACE == 1 && sign == 0 && ISPLUS == 0) ? ' ' : c;
-	str_float = ft_strnew(bl);
-	if (g_mode.width > len && ISZERO == 0)
-		ft_memset(str_float, 32, bl - len);
-	else if (g_mode.width > len && ISZERO == 1)
-		ft_memset(str_float, 48, bl - len);
-	if (g_mode.width > len && !ISZERO && c)
-		str_float[bl - len - 1] = c;
-	else if ((g_mode.width > len && ISZERO && c) || g_mode.width < len)
-		str_float[0] = c;
-	*s = ft_strcat(str_float, *s);
+	nb2 = (int)nb;
+	if ((nb2 & 1U) == 1)
+		return (FALSE);
+	return (TRUE);
 }
 
-void	pf_float_output(char **s, size_t len, size_t bl, int sign)
+char	*pf_float_inf_nan(float_cast d1)
 {
-	char 	*str_float;
-	char	*tmp;
+	char	*res;
 
-	if (ISMINUS == 1)
+	res = ft_strnew(3);
+	if (d1.parts.exponent == 2047 && d1.parts.mantisa != 0)
 	{
-		str_float = ft_strnew(bl);
-		tmp = *s;
-		(ISPLUS == 1 && sign == 0) ? str_float[0] = '+' : str_float[0];
-		(sign == 1) ? str_float[0] = '-' : str_float[0];
-		(!ISPLUS && sign == 0 && ISSPACE) ? str_float[0] = ' ' : str_float[0];
-		*s = ft_strcat(str_float, *s);
-		free(tmp);
-		if (g_mode.width > len && ISZERO == 0)
-			ft_memset(&str_float[len + 1], 32, bl - len - 1);
-		else if (g_mode.width > len && ISZERO == 1)
-			ft_memset(&str_float[len + 1], 48, bl - len - 1);
+		g_mode.prec = 0;
+		return (ft_strcpy(res, (g_mode.specif == 'f') ? "nan" : "NAN"));
 	}
-	else
-		pf_float_output_nominus(s, len, bl, sign);
+	else if (d1.parts.exponent == 2047 && d1.parts.mantisa == 0)
+	{
+		g_mode.prec = 0;
+		return (ft_strcpy(res, (g_mode.specif == 'f') ? "inf" : "INF"));
+	}
+	return (res);
 }

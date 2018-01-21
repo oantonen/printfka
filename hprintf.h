@@ -33,15 +33,6 @@ typedef struct	s_spec
 }				parts;
 }				float_cast;
 
-// typedef struct	s_
-// {
-// 	int			flags;
-// 	int			width;
-// 	int			prec;
-// 	char		specif;
-
-// }				t_spec;
-
 t_spec	g_mode;
 
 # define TRUE 1
@@ -84,6 +75,7 @@ t_spec	g_mode;
 # include <stdarg.h>
 # include <stdio.h>
 # include "libft.h"
+# include <float.h>
 
 char	*pf_putchar(unsigned int c);
 char	*pf_putstr(va_list ap);
@@ -94,14 +86,15 @@ char	*pf_put_unsigned_nb(va_list ap);
 int		specif(char s);
 char	*add_mem(char *super_str, char *result, int *buf);
 int		pf_get_num(char **str);
-char	*pf_float_f(double nb);
-void	pf_float_output(char **s, size_t len, size_t bl, int sign);
-double	pf_float_sqrt(double sample, int prec);
+char	*pf_put_float_f(va_list ap);
+void	pf_float_output(char **s, int len, int bl, int sign);
+double	pf_float_sqrt(long double sample, int prec);
 char	*pf_final_modify(char *s, int len_old, int width, char *pref);
 char	*pf_percent();
 char	*pf_function_call(char c, va_list ap);
 char	*pf_char_count(uintmax_t value, int base, int *chars, int prec);
+char	*pf_float_inf_nan(float_cast d1);
+int		pf_check_even(long double nb);
 
-// int (*g_functions[])() = {pf_putchar, pf_putstr};
 
 #endif

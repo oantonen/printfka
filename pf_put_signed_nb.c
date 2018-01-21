@@ -34,10 +34,9 @@ char		*pf_arr_length(long long int nb, int *chars, int prec)
 		((i > 3 && nb > 0) || (i > 4 && nb < 0)) ? *chars += (i / 3) : *chars;
 		*chars = (i % 3 == 0 && i > 3) ? *chars - 1 : *chars;
 	}
-	*chars += (prec > i) ? prec - i : 0;
+	*chars += (prec > i) ? prec - *chars : 0;
 	fresh = ft_strnew(*chars);
 	ft_memset(fresh, '0', *chars);
-	// printf("chars=%d\n", *chars);
 	return (fresh);
 }
 
