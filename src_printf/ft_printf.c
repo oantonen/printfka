@@ -92,7 +92,7 @@ char	*browse_arg(char *arg, va_list ap, char *flags, char *sup_str)
 			clr = pf_function_call(*arg, ap);
 			isdigit_spec(*arg++, &position);
 			ft_memcpy(&sup_str[*position], clr, g_mode.cur_len);
-			ft_strdel(&clr);
+			// ft_strdel(&clr);
 		}
 	}
 	return (sup_str);
@@ -105,8 +105,8 @@ int		ft_printf(const char *arg, ...)
 	int			printf_len;
 	char		*flags;
 
-	super_str = ft_strnew(1000);
-	flags = " -+#*hlLt$jz\'.01234567890";
+	super_str = ft_strnew(1000000);
+	flags = " -+#*hlL$jz\'.01234567890";
 	va_start(ap, arg);
 	super_str = browse_arg((char*)arg, ap, flags, super_str);
 	va_end(ap);
