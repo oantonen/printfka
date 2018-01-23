@@ -16,9 +16,10 @@ char	*ft_flag_width(char *str, int len, int width)
 {
 	char	*tmp;
 
-	tmp = ft_strcpy(ft_strnew(len), str);
+	tmp = NULL;
 	if (width > len && ISMINUS == 0)
 	{
+		tmp = str;
 		str = ft_strnew(width);
 		if (ISZERO == 0)
 			str = ft_memset(str, ' ', width - len);
@@ -28,11 +29,12 @@ char	*ft_flag_width(char *str, int len, int width)
 	}
 	else if (width > len && ISMINUS == 1)
 	{
+		tmp = str;
 		str = ft_strnew(width);
 		str = ft_memset(str, ' ', width);
 		str = ft_memcpy(str, tmp, len);
 	}
-	// ft_strdel(&tmp);
+	(tmp) ? ft_strdel(&tmp) : tmp;
 	len = (ft_strchr("cC", g_mode.specif) && width > len) ? width : len;
 	g_mode.sup_len += (ft_strchr("cC", g_mode.specif)) ? len : ft_strlen(str);
 	g_mode.cur_len = (ft_strchr("cC", g_mode.specif)) ? len : ft_strlen(str);
@@ -52,19 +54,19 @@ char	*ft_str_unic(char *str, unsigned int *s)
 			tmp = str;
 			pchar = pf_putchar(*s++);
 			str = ft_strjoin(str, pchar);
-			// ft_strdel(&tmp);
-			// ft_strdel(&pchar);
+			ft_strdel(&tmp);
+			ft_strdel(&pchar);
 		}
 	else if (ISDOT == 1 && g_mode.prec)
 		while (*s && g_mode.prec / ft_strlen(pf_putchar(*s)))
 		{
 			tmp = str;
+			pchar = pf_putchar(*s++);
 			g_mode.prec = g_mode.prec - ft_strlen(pf_putchar(*s));
-			str = ft_strjoin(str, pf_putchar(*s++));
-			// ft_strdel(&tmp);
+			str = ft_strjoin(str, pchar);
+			ft_strdel(&tmp);
+			ft_strdel(&pchar);
 		}
-	else if (ISDOT == 1 && g_mode.prec == 0)
-		return (str);
 	return (str);
 }
 

@@ -92,7 +92,7 @@ char	*browse_arg(char *arg, va_list ap, char *flags, char *sup_str)
 			clr = pf_function_call(*arg, ap);
 			isdigit_spec(*arg++, &position);
 			ft_memcpy(&sup_str[*position], clr, g_mode.cur_len);
-			// ft_strdel(&clr);
+			ft_strdel(&clr);
 		}
 	}
 	return (sup_str);
